@@ -17,7 +17,7 @@
 ## 运行
 
 ```powershell
-cd E:\充电桩\charge-platform-learning\simulator
+cd E:\充电桩\ev-charging-platform\simulator
 mvn "-Dmaven.repo.local=D:\Maven3.9.16\apache-maven-3.9.16\mvn_repo" test
 mvn "-Dmaven.repo.local=D:\Maven3.9.16\apache-maven-3.9.16\mvn_repo" package
 java -Dsimulator.device-id=SIM-PILE-001 -Dsimulator.connectors=2 -Dsimulator.time-scale=60 -jar target/charge-platform-simulator-0.1.0-SNAPSHOT.jar
@@ -34,7 +34,7 @@ TCP 集成测试覆盖真实 `ServerSocket`：随机端口启动、连接握手�
 先在有 Maven 的环境打包 JAR，再把 `target/charge-platform-simulator-0.1.0-SNAPSHOT.jar` 和本目录文件复制到 Docker 主机。Compose 直接使用 Docker 主机已有的 `centos7-jdk17:latest` 镜像并挂载 JAR，不执行 `docker build`，因此不需要访问 Docker Hub。
 
 ```powershell
-cd E:\充电桩\charge-platform-learning\simulator
+cd E:\充电桩\ev-charging-platform\simulator
 mvn "-Dmaven.repo.local=D:\Maven3.9.16\apache-maven-3.9.16\mvn_repo" package
 ```
 

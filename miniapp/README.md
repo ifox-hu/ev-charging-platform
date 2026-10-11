@@ -7,7 +7,7 @@
 用微信开发者工具导入本目录：
 
 ```text
-E:\充电桩\charge-platform-learning\miniapp
+E:\充电桩\ev-charging-platform\miniapp
 ```
 
 开发环境默认请求：`http://localhost:8081/api`。地址集中在 `config/env.js`；真机调试时改成电脑局域网 IP，并在开发者工具中暂时关闭合法域名校验。

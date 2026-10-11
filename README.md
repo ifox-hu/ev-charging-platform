@@ -2,7 +2,7 @@
 
 一个可运行、可联调的充电运营平台作品，覆盖设备接入、实时状态、订单计费、消息可靠性和 Docker 部署。
 
-> GitHub Pages：启用 Actions 后访问 `https://ifox-hu.github.io/charge-platform-learning/`
+> GitHub Pages：启用 Actions 后访问 `https://ifox-hu.github.io/ev-charging-platform/`
 
 ## GitHub Pages 在线演示
 
@@ -25,7 +25,7 @@ npm run dev
 
 完整本地联调使用下面的组合：虚拟机 Docker 运行 MySQL、Redis、RabbitMQ 和三台模拟桩；Windows IDEA 运行后端；Windows 终端运行前端；微信开发者工具运行小程序。首次启动和日常启动都按“环境准备与首次启动”执行。
 
-不想安装本地依赖时，直接打开 [GitHub Pages 快速演示](https://ifox-hu.github.io/charge-platform-learning/)。它使用浏览器演示数据，不连接本地后端、数据库、Redis、RabbitMQ 或模拟桩。
+不想安装本地依赖时，直接打开 [GitHub Pages 快速演示](https://ifox-hu.github.io/ev-charging-platform/)。它使用浏览器演示数据，不连接本地后端、数据库、Redis、RabbitMQ 或模拟桩。
 
 ## 演示体验
 
@@ -79,7 +79,7 @@ npm run dev
 
 完整链路：客户端选择空闲枪 -> 后端校验并锁定 -> 发送 START -> 模拟桩上报电量 -> 发送 STOP -> 分时电价结算 -> 事务提交后发布订单完成事件。
 
-仓库：https://github.com/ifox-hu/charge-platform-learning
+仓库：https://github.com/ifox-hu/ev-charging-platform
 
 ### 1.1 项目背景
 
@@ -111,8 +111,8 @@ npm run dev
 ### 2.2 准备 Windows 项目
 
 ```powershell
-git clone https://github.com/ifox-hu/charge-platform-learning.git
-cd E:\充电桩\charge-platform-learning
+git clone https://github.com/ifox-hu/ev-charging-platform.git
+cd E:\充电桩\ev-charging-platform
 ```
 
 Windows 需要安装 JDK 17、Maven 3.9+、Node.js 20 LTS 和 npm 10+。虚拟机需要 Docker Engine、Docker Compose v2，以及 `centos7-jdk17:latest` 镜像。
@@ -158,11 +158,11 @@ docker load -i centos7-jdk17.tar
 模拟桩容器只需要一个 JAR。Windows 编译：
 
 ```powershell
-cd E:\充电桩\charge-platform-learning\simulator
+cd E:\充电桩\ev-charging-platform\simulator
 mvn package
 ```
 
-通过你当前使用的虚拟机文件拖拽功能，把下面这些内容放到虚拟机同一个项目目录，例如 `/root/charge-platform-learning/`：
+通过你当前使用的虚拟机文件拖拽功能，把下面这些内容放到虚拟机同一个项目目录，例如 `/root/ev-charging-platform/`：
 
 ```text
 docker-compose.server.yml
@@ -175,7 +175,7 @@ simulator/target/charge-platform-simulator-0.1.0-SNAPSHOT.jar
 虚拟机目录结构必须是：
 
 ```text
-/root/charge-platform-learning/
+/root/ev-charging-platform/
 ├── .env
 ├── docker-compose.server.yml
 ├── docs/
@@ -204,7 +204,7 @@ SIMULATOR_TIME_SCALE=1
 在虚拟机中执行。这里明确只启动基础设施和模拟桩，不启动 Compose 里的后端和前端：
 
 ```bash
-cd /root/charge-platform-learning
+cd /root/ev-charging-platform
 docker compose -f docker-compose.server.yml config --quiet
 docker compose -f docker-compose.server.yml up -d \
   mysql redis rabbitmq simulator-001 simulator-002 simulator-003
@@ -281,7 +281,7 @@ $env:SIMULATOR_ENABLED = 'true'
 $env:SIMULATOR_SYNC_DATABASE = 'true'
 $env:SIMULATOR_DEVICES = 'SIM-PILE-001@192.168.6.100:9100,SIM-PILE-002@192.168.6.100:9101,SIM-PILE-003@192.168.6.100:9102'
 
-cd E:\充电桩\charge-platform-learning\backend
+cd E:\充电桩\ev-charging-platform\backend
 mvn spring-boot:run
 ```
 
@@ -292,14 +292,14 @@ IDEA 和终端二选一，不要同时启动两个后端实例。
 Windows 终端启动 Web：
 
 ```powershell
-cd E:\充电桩\charge-platform-learning\frontend
+cd E:\充电桩\ev-charging-platform\frontend
 npm ci
 npm run dev -- --host 0.0.0.0
 ```
 
 访问 `http://localhost:5174`。Vite 会把 `/api` 和 `/ws` 代理到 IDEA 的 `8081`。
 
-微信开发者工具导入 `E:\充电桩\charge-platform-learning\miniapp`。开发环境 `miniapp/config/env.js` 保持：
+微信开发者工具导入 `E:\充电桩\ev-charging-platform\miniapp`。开发环境 `miniapp/config/env.js` 保持：
 
 ```javascript
 baseUrl: 'http://127.0.0.1:8081/api'
@@ -312,7 +312,7 @@ baseUrl: 'http://127.0.0.1:8081/api'
 虚拟机中日常启动 6 个容器：
 
 ```bash
-cd /root/charge-platform-learning
+cd /root/ev-charging-platform
 docker compose -f docker-compose.server.yml start mysql redis rabbitmq simulator-001 simulator-002 simulator-003
 ```
 
@@ -335,7 +335,7 @@ docker compose -f docker-compose.server.yml logs --tail=100 mysql redis rabbitmq
 如果不想单独启动后端和 Windows 前端，可以在一台 Docker 主机上准备完整项目目录、`.env` 和所需基础镜像，然后启动根目录的 `docker-compose.yml`。它会同时运行 MySQL、Redis、RabbitMQ、三台模拟桩、后端和 Nginx 前端：
 
 ```bash
-cd /root/charge-platform-learning
+cd /root/ev-charging-platform
 docker compose -f docker-compose.yml config --quiet
 docker compose -f docker-compose.yml up -d --build
 docker compose -f docker-compose.yml ps
@@ -589,7 +589,7 @@ mysql -h 127.0.0.1 -uroot -p charge_platform < charge_platform_backup.sql
 本地构建：
 
 ~~~powershell
-cd E:\充电桩\charge-platform-learning\backend; mvn package
+cd E:\充电桩\ev-charging-platform\backend; mvn package
 cd ..\simulator; mvn package
 cd ..\frontend; npm ci; npm run build
 ~~~
@@ -602,7 +602,7 @@ cd ..\frontend; npm ci; npm run build
 docker compose -f docker-compose.server.yml config --quiet
 docker compose -f docker-compose.server.yml up -d
 docker compose -f docker-compose.server.yml ps
-docker port charge-platform-learning-frontend-1
+docker port ev-charging-platform-frontend-1
 ~~~
 
 离线版 Nginx 监听 443，需要 certs/server.crt 和 certs/server.key。证书缺失时前端容器会反复重启。更新时先备份，再上传新 JAR/dist，最后执行：
